@@ -1,0 +1,15 @@
+name: Trigger Docker Build on Release
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  trigger-docker-build:
+    uses: .github/workflows/docker-images-custom.yml
+    with:
+      branch: master
+      tag: ${{ github.event.release.tag_name }}
+      merge-master: false
+      user: github-actions
+    secrets: inherit
