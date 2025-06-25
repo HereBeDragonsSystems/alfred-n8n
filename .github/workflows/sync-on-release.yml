@@ -50,7 +50,7 @@ jobs:
       - name: Pull release tag from upstream and merge
         if: steps.check_release.outputs.new_release == 'true'
         run: |
-          tag=$(cat latest_release.txt)
+          tag=${{ steps.get_release.outputs.tag }}
           git fetch upstream tag "$tag"
           git merge "tags/$tag" --no-edit
           echo "$tag" > .last_synced_release
@@ -59,7 +59,7 @@ jobs:
         if: steps.check_release.outputs.new_release == 'true'
         run: |
           git add .last_synced_release
-          git commit -m "Sync with upstream release $(cat .last_synced_release)" || echo "No changes"
+          git commit -m "Sync with upstream release ${{ steps.get_release.outputs.tag }}" || echo "No changes"
           git push origin master
 
       - name: Create new release
@@ -67,5 +67,5 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          tag=$(cat latest_release.txt)
+          tag=${{ steps.get_release.outputs.tag }}
           gh release create "$tag" --title "$tag" --notes "Synced with upstream release $tag"
