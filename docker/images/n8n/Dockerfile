@@ -69,6 +69,8 @@ RUN \
 RUN npm install -g npm@11.4.1
 RUN apk --purge del apk-tools
 
+# install custom nodes, tooling and dependencies
+
 ENV SHELL /bin/sh
 USER node
 ENTRYPOINT ["tini", "--", "/docker-entrypoint.sh"]
